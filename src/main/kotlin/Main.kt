@@ -1,6 +1,6 @@
 package de.sschellhoff
 
 fun main() {
-    println(part1())
-    println(part2())
+    Day01().run()
+    Day02().run()
 }
