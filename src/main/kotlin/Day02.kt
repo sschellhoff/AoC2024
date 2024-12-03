@@ -4,8 +4,10 @@ import java.util.function.Predicate
 
 class Day02 {
     fun run() {
-        println(part1())
-        println(part2())
+        println("Day 2")
+        println("part 1: ${part1()}")
+        println("part 2: ${part2()}")
+        println()
     }
 
     private fun part1(): Int = readDay2().count { it.isSafe() }

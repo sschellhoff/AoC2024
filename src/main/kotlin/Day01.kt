@@ -4,8 +4,10 @@ import kotlin.math.abs
 
 class Day01 {
     fun run () {
-        println(part1())
-        println(part2())
+        println("Day 1")
+        println("part 1: ${part1()}")
+        println("part 2: ${part2()}")
+        println()
     }
 
     private fun part1(): Int {
