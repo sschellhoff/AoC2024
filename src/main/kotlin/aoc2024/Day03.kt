@@ -1,25 +1,18 @@
 package de.sschellhoff.aoc2024
 
-import de.sschellhoff.getInput
+import de.sschellhoff.utils.Day
 
-class Day03 {
-    fun run() {
-        println("Day 3")
-        println("part 1: ${part1()}")
-        println("part 2: ${part2()}")
-        println()
-    }
-
+class Day03: Day(3, 161, 48, "", "_2") {
     private val mulRegex = """mul\(\d{1,3},\d{1,3}\)""".toRegex()
     private val instructionRegex = """do\(\)|don't\(\)|mul\(\d{1,3},\d{1,3}\)""".toRegex()
 
-    private fun part1(): Long {
-        return mulRegex.findAll(getInput("03")).map { a -> a.getMul() }.sum()
+    override fun part1(input: String): Long {
+        return mulRegex.findAll(input).map { a -> a.getMul() }.sum()
     }
 
-    private fun part2(): Long {
+    override fun part2(input: String): Long {
         var count = true
-        return instructionRegex.findAll(getInput("03")).map {
+        return instructionRegex.findAll(input).map {
             when (it.value) {
                 "do()" -> {
                     count = true

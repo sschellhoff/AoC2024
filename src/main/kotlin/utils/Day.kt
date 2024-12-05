@@ -2,7 +2,7 @@ package de.sschellhoff.utils
 
 import de.sschellhoff.getInput
 
-open class Day(private val day: Int, private val testResultPart1: Long? = null, private val testResultPart2: Long? = null) {
+open class Day(private val day: Int, private val testResultPart1: Long? = null, private val testResultPart2: Long? = null, private val testInputSuffixPart1: String = "", private val testInputSuffixPart2: String = "") {
     enum class RunMode {
         REAL, TEST, BOTH
     }
@@ -20,7 +20,7 @@ open class Day(private val day: Int, private val testResultPart1: Long? = null, 
 
     private fun runPart(runMode: RunMode, dayAsString: String, part: Part) {
         if (runMode == RunMode.TEST || runMode == RunMode.BOTH) {
-            val testInput = getInput(dayAsString, true)
+            val testInput = getInput(dayAsString, true, if (part == Part.One) testInputSuffixPart1 else testInputSuffixPart2)
             val testResult = if (part == Part.One) part1(testInput) else part2(testInput)
             printResult(testResult, if (part == Part.One) testResultPart1 else testResultPart2, part.toInt, true)
         }

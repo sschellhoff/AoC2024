@@ -6,7 +6,7 @@ import de.sschellhoff.utils.Day
 fun main() {
     Day01().run(Day.RunMode.BOTH)
     Day02().run(Day.RunMode.BOTH)
-    Day03().run()
+    Day03().run(Day.RunMode.BOTH)
     Day04().run(Day.RunMode.BOTH)
     Day05().run(Day.RunMode.BOTH)
 }
