@@ -1,4 +1,6 @@
-package de.sschellhoff
+package de.sschellhoff.aoc2024
+
+import de.sschellhoff.getInput
 
 class Day03 {
     fun run() {

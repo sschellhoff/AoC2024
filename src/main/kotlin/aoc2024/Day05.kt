@@ -1,15 +1,10 @@
-package de.sschellhoff
+package de.sschellhoff.aoc2024
 
-class Day05 {
-    fun run() {
-        println("Day 5")
-        println("part 1: ${part1()}")
-        println("part 2: ${part2()}")
-        println()
-    }
+import de.sschellhoff.utils.Day
 
-    private fun part1(): Long {
-        val (orderings, updates) = getInput()
+class Day05: Day(5, 143, 123) {
+    override fun part1(input: String): Long {
+        val (orderings, updates) = parseInput(input)
         return updates.sumOf {
             if (it.getSorted(orderings) == it)
                 it.getMiddleElement()
@@ -18,8 +13,8 @@ class Day05 {
         }
     }
 
-    private fun part2(): Long {
-        val (orderings, updates) = getInput()
+    override fun part2(input: String): Long {
+        val (orderings, updates) = parseInput(input)
         return updates.sumOf {
             if (it.getSorted(orderings) == it)
                 0
@@ -38,8 +33,8 @@ class Day05 {
         })
     }
 
-    private fun getInput(test: Boolean = false): Pair<Map<Long, Set<Long>>, List<List<Long>>> {
-        val (fst, snd) = getInput("05", test).blocks()
+    private fun parseInput(input: String): Pair<Map<Long, Set<Long>>, List<List<Long>>> {
+        val (fst, snd) = input.blocks()
         val orderings = fst.buildOrderings()
         val updates = snd.lines().map { line -> line.split(",").map { it.toLong() } }
         return orderings to updates

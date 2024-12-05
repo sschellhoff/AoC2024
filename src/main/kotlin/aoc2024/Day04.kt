@@ -1,15 +1,10 @@
-package de.sschellhoff
+package de.sschellhoff.aoc2024
 
-class Day04 {
-    fun run() {
-        println("Day 4")
-        println("part 1: ${part1()}")
-        println("part 2: ${part2()}")
-        println()
-    }
+import de.sschellhoff.utils.Day
 
-    private fun part1(): Long {
-        val grid = getInput("04").lines()
+class Day04: Day(4, 18, 9) {
+    override fun part1(input: String): Long {
+        val grid = input.lines()
         var count = 0L
         grid.forEachIndexed { y, line ->
             line.indices.forEach { x ->
@@ -23,8 +18,8 @@ class Day04 {
         return count
     }
 
-    private fun part2(): Long {
-        val grid = getInput("04").lines()
+    override fun part2(input: String): Long {
+        val grid = input.lines()
         var count = 0L
         grid.forEachIndexed { y, line ->
             line.indices.forEach { x ->
