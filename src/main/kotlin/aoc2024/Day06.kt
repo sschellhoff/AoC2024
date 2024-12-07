@@ -11,16 +11,14 @@ class Day06 : Day(6, 41, 6) {
     override fun part2(input: String): Long {
         val problem = Problem.from(input)
         var count = 0
-        repeat(problem.lab.height.toInt()) { y ->
-            repeat(problem.lab.width.toInt()) { x ->
-                val newProblem = problem.copy()
-                if (newProblem.lab.add(Vector2(x.toLong(), y.toLong()))) {
-                    val (reason, path) = newProblem.moveUntilOutOfBounds()
-                    if (reason == Problem.TerminationReason.Loop) {
-                        count += 1
-                    }
-                    newProblem.lab.remove(Vector2(x.toLong(), y.toLong()))
+        problem.copy().moveUntilOutOfBounds().second.forEach {  (x, y) ->
+            val newProblem = problem.copy()
+            if (newProblem.lab.add(Vector2(x, y))) {
+                val (reason, _) = newProblem.moveUntilOutOfBounds()
+                if (reason == Problem.TerminationReason.Loop) {
+                    count += 1
                 }
+                newProblem.lab.remove(Vector2(x, y))
             }
         }
         return count.toLong()

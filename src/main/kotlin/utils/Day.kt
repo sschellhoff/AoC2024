@@ -13,8 +13,11 @@ open class Day(private val day: Int, private val testResultPart1: Long? = null, 
     fun run(runMode: RunMode = RunMode.REAL) {
         val dayAsString = day.toString().padStart(2, '0')
 
-        println("Day $day")
+        val resetColor = "\u001b[0m"
+        val bold = "\u001b[1m"
+        println("$bold--==:: Day $day ::==--$resetColor")
         runPart(runMode, dayAsString, Part.One)
+        println("--------------------")
         runPart(runMode, dayAsString, Part.Two)
         println()
     }
@@ -35,7 +38,9 @@ open class Day(private val day: Int, private val testResultPart1: Long? = null, 
                 if (part == Part.One) part1(realInput) else part2(realInput)
             }
             printResult(realResult, null, part.toInt, false)
-            println(duration)
+            val redColor = "\u001b[31m"
+            val resetColor = "\u001b[0m"
+            println("$redColor$duration$resetColor")
         }
     }
 
