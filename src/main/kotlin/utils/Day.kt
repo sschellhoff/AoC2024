@@ -1,6 +1,7 @@
 package de.sschellhoff.utils
 
 import de.sschellhoff.getInput
+import kotlin.time.measureTimedValue
 
 open class Day(private val day: Int, private val testResultPart1: Long? = null, private val testResultPart2: Long? = null, private val testInputSuffixPart1: String = "", private val testInputSuffixPart2: String = "") {
     enum class RunMode {
@@ -21,14 +22,20 @@ open class Day(private val day: Int, private val testResultPart1: Long? = null, 
     private fun runPart(runMode: RunMode, dayAsString: String, part: Part) {
         if (runMode == RunMode.TEST || runMode == RunMode.BOTH) {
             val testInput = getInput(dayAsString, true, if (part == Part.One) testInputSuffixPart1 else testInputSuffixPart2)
-            val testResult = if (part == Part.One) part1(testInput) else part2(testInput)
+            val (testResult, duration) = measureTimedValue {
+                if (part == Part.One) part1(testInput) else part2(testInput)
+            }
             printResult(testResult, if (part == Part.One) testResultPart1 else testResultPart2, part.toInt, true)
+            println(duration)
         }
 
         if (runMode == RunMode.REAL || runMode == RunMode.BOTH) {
             val realInput = getInput(dayAsString)
-            val realResult = if (part == Part.One) part1(realInput) else part2(realInput)
+            val (realResult, duration) = measureTimedValue {
+                if (part == Part.One) part1(realInput) else part2(realInput)
+            }
             printResult(realResult, null, part.toInt, false)
+            println(duration)
         }
     }
 
