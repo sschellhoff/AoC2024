@@ -3,7 +3,7 @@ package de.sschellhoff.utils
 import de.sschellhoff.getInput
 import kotlin.time.measureTimedValue
 
-open class Day(private val day: Int, private val testResultPart1: Long? = null, private val testResultPart2: Long? = null, private val testInputSuffixPart1: String = "", private val testInputSuffixPart2: String = "") {
+abstract class Day(private val day: Int, private val testResultPart1: Long? = null, private val testResultPart2: Long? = null, private val testInputSuffixPart1: String = "", private val testInputSuffixPart2: String = "") {
     enum class RunMode {
         REAL, TEST, BOTH
     }
@@ -56,12 +56,7 @@ open class Day(private val day: Int, private val testResultPart1: Long? = null, 
         println("part $part${if (isTest) " (test)" else ""}: $printColor$result$resetColor")
     }
 
-    protected open fun part1(input: String): Long {
-        return 0
-    }
+    protected abstract fun part1(input: String): Long
 
-    protected open fun part2(input: String): Long {
-        return 0
-    }
-
+    protected abstract fun part2(input: String): Long
 }
