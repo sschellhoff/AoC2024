@@ -47,10 +47,8 @@ class Day10: Day(10, 36, 81) {
         starts.map { find(it, targetValue).size }
 
     private fun Grid<Int>.rating(start: Vector2i, targetValue: Int): Long {
-        val predecessors = mutableMapOf<Vector2i, MutableSet<Vector2i>>()
         val ways = mutableMapOf<Vector2i, Long>(start to 1)
         return findTargets(start, targetValue) { position, next ->
-            predecessors.getOrPut(next) { mutableSetOf() }.add(position)
             val length = ways.getOrPut(next) { 0 } + ways.getOrDefault(position, 1)
             ways[next] = length
         }.sumOf { ways.getOrDefault(it, 0) }
