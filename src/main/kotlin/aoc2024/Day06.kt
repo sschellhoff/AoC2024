@@ -1,8 +1,7 @@
 package de.sschellhoff.aoc2024
 
-import de.sschellhoff.utils.Day
-import de.sschellhoff.utils.Vector2
-import de.sschellhoff.utils.move
+import de.sschellhoff.utils.*
+import de.sschellhoff.utils.Direction
 
 class Day06 : Day(6, 41, 6) {
     override fun part1(input: String): Long {
@@ -72,46 +71,14 @@ class Day06 : Day(6, 41, 6) {
             }
         }
     }
-}
+    data class Lab(private val obstructions: MutableSet<Vector2>, val width: Long, val height: Long) {
+        fun add(position: Vector2): Boolean = obstructions.add(position)
+        fun isObstructed(position: Vector2): Boolean = obstructions.contains(position)
+        fun isOutOfBounds(position: Vector2): Boolean =
+            position.x < 0 || position.y < 0 || position.x >= width || position.y >= height
 
-enum class Direction {
-    NORTH, EAST, SOUTH, WEST
-}
-
-fun Direction.turnLeft(): Direction {
-    return when (this) {
-        Direction.NORTH -> Direction.WEST
-        Direction.EAST -> Direction.NORTH
-        Direction.SOUTH -> Direction.EAST
-        Direction.WEST -> Direction.SOUTH
-    }
-}
-
-fun Direction.turnRight(): Direction {
-    return when (this) {
-        Direction.NORTH -> Direction.EAST
-        Direction.EAST -> Direction.SOUTH
-        Direction.SOUTH -> Direction.WEST
-        Direction.WEST -> Direction.NORTH
-    }
-}
-
-fun Direction.turnAround(): Direction {
-    return when (this) {
-        Direction.NORTH -> Direction.SOUTH
-        Direction.EAST -> Direction.WEST
-        Direction.SOUTH -> Direction.NORTH
-        Direction.WEST -> Direction.EAST
-    }
-}
-
-data class Lab(private val obstructions: MutableSet<Vector2>, val width: Long, val height: Long) {
-    fun add(position: Vector2): Boolean = obstructions.add(position)
-    fun isObstructed(position: Vector2): Boolean = obstructions.contains(position)
-    fun isOutOfBounds(position: Vector2): Boolean =
-        position.x < 0 || position.y < 0 || position.x >= width || position.y >= height
-
-    fun remove(vector: Vector2) {
-        obstructions.remove(vector)
+        fun remove(vector: Vector2) {
+            obstructions.remove(vector)
+        }
     }
 }
