@@ -1,7 +1,6 @@
 package de.sschellhoff.aoc2024
 
 import de.sschellhoff.utils.*
-import java.lang.Long.max
 
 class Day10: Day(10, 36, 81) {
     override fun part1(input: String): Long {
@@ -21,20 +20,26 @@ class Day10: Day(10, 36, 81) {
         return Grid(data)
     }
 
-    private fun Grid<Int>.find(start: Vector2i, targetValue: Int): Set<Vector2i> {
-        val l = mutableSetOf(start)
-        val r = mutableSetOf<Vector2i>()
+    private fun Grid<Int>.find(start: Vector2i, targetValue: Int): Set<Vector2i> =
+        findTargets(start, targetValue) { _, _ -> }
+
+    private fun Grid<Int>.findTargets(start: Vector2i, targetValue: Int, action: (position: Vector2i, next: Vector2i) -> Unit): Set<Vector2i> {
+        val currentWave = mutableSetOf(start)
+        val nextWave = mutableSetOf<Vector2i>()
         while(true) {
-            l.forEach { position ->
+            currentWave.forEach { position ->
                 val n = getNeighbours(position) { next -> get(next) == get(position) + 1 }
-                r.addAll(n)
+                n.forEach { next ->
+                    action(position, next)
+                }
+                nextWave.addAll(n)
             }
-            if (r.isEmpty() || get(r.first()) == targetValue) {
-                return r
+            if (nextWave.isEmpty() || get(nextWave.first()) == targetValue) {
+                return nextWave
             }
-            l.clear()
-            l.addAll(r)
-            r.clear()
+            currentWave.clear()
+            currentWave.addAll(nextWave)
+            nextWave.clear()
         }
     }
 
@@ -44,30 +49,13 @@ class Day10: Day(10, 36, 81) {
     private fun Grid<Int>.rating(start: Vector2i, targetValue: Int): Long {
         val predecessors = mutableMapOf<Vector2i, MutableSet<Vector2i>>()
         val ways = mutableMapOf<Vector2i, Long>(start to 1)
-        var maxRating = 0L
-        val l = mutableSetOf(start)
-        val r = mutableSetOf<Vector2i>()
-        while(true) {
-            l.forEach { position ->
-                val n = getNeighbours(position) { next -> get(next) == get(position) + 1 }
-                n.forEach {
-                    predecessors.getOrPut(it) { mutableSetOf() }.add(position)
-                    val length = ways.getOrPut(it) { 0 } + ways.getOrDefault(position, 1)
-                    ways[it] = length
-                }
-                r.addAll(n)
-            }
-            maxRating = max(maxRating, r.size.toLong())
-            if (r.isEmpty() || get(r.first()) == targetValue) {
-                return r.sumOf { ways.getOrDefault(it, 0) }
-            }
-            l.clear()
-            l.addAll(r)
-            r.clear()
-        }
+        return findTargets(start, targetValue) { position, next ->
+            predecessors.getOrPut(next) { mutableSetOf() }.add(position)
+            val length = ways.getOrPut(next) { 0 } + ways.getOrDefault(position, 1)
+            ways[next] = length
+        }.sumOf { ways.getOrDefault(it, 0) }
     }
 
-    private fun Grid<Int>.rating(starts: Set<Vector2i>, targetValue: Int): List<Long> {
-        return starts.map { rating(it, targetValue) }
-    }
+    private fun Grid<Int>.rating(starts: Set<Vector2i>, targetValue: Int): List<Long> =
+        starts.map { rating(it, targetValue) }
 }
