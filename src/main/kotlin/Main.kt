@@ -14,4 +14,5 @@ fun main() {
     Day08().run(Day.RunMode.BOTH)
     Day09().run(Day.RunMode.BOTH)
     Day10().run(Day.RunMode.BOTH)
+    Day11().run(Day.RunMode.BOTH)
 }
