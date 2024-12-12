@@ -42,8 +42,8 @@ class Day12 : Day(12, 1930, 1206) {
         selectComponent: (position: Vector2i) -> Int,
     ): Int {
         var perimeter = 0
-        val groupedByX = edgePieces.groupBy(selectComponent).map { it.value }
-        groupedByX.forEach { group ->
+        val groupedByComponent = edgePieces.groupBy(selectComponent).map { it.value }
+        groupedByComponent.forEach { group ->
             directions.forEach { direction ->
                 perimeter += getRangesForSite(group, areaPieces, direction).size
             }
