@@ -15,10 +15,7 @@ class Day10: Day(10, 36, 81) {
         return grid.rating(starts, 9).sum()
     }
 
-    private fun String.toGrid(): Grid<Int> {
-        val data = lines().map { line -> line.map { c -> c.digitToInt() } }
-        return Grid(data)
-    }
+    private fun String.toGrid(): Grid<Int> = Grid.fromString(this) { it.digitToInt() }
 
     private fun Grid<Int>.find(start: Vector2i, targetValue: Int): Set<Vector2i> =
         findTargets(start, targetValue) { _, _ -> }

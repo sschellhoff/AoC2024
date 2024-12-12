@@ -50,4 +50,43 @@ data class Grid<T>(private val data: List<List<T>>) {
             position.move(direction)
         }.filter { inBounds(it) && predicate.test(it) }
     }
+
+    companion object {
+        fun <T>fromString(input: String, toNode: (c: Char) -> T): Grid<T> =
+            input.lines().map { line -> line.map { toNode(it) } }.let { Grid(data = it) }
+    }
+}
+
+fun <T>Grid<T>.floodFill(start: Vector2i, handleEdgePiece: (position: Vector2i, numberOfMatchingNeighbours: Int) -> Unit): Set<Vector2i> {
+    val value = get(start)
+    val visited = mutableSetOf<Vector2i>()
+    val toCheck = mutableListOf(start)
+    while (toCheck.isNotEmpty()) {
+        val next = toCheck.removeLast()
+        if (!visited.add(next)) {
+            continue
+        }
+        val neighbours = getNeighbours(next) { get(it) == value }
+        val numberOfMatchingNeighbours = neighbours.size
+        if (numberOfMatchingNeighbours < 4) {
+            handleEdgePiece(next, numberOfMatchingNeighbours)
+        }
+        neighbours.forEach { toCheck.add(it) }
+    }
+    return visited
+}
+
+fun <T>Grid<T>.forDistinctAreas(handleArea: (areaPieces: Set<Vector2i>, edgeInfo: List<Pair<Vector2i, Int>>) -> Unit) {
+    val visited = mutableSetOf<Vector2i>()
+    forEachIndexed { x, y, _ ->
+        val position = Vector2i(x, y)
+        if (!visited.contains(position)) {
+            val edgeInfo = mutableListOf<Pair<Vector2i, Int>>()
+            val region = floodFill(position) { edgePosition, numberOfNeighbours ->
+                edgeInfo.add(edgePosition to (numberOfNeighbours))
+            }
+            handleArea(region, edgeInfo)
+            visited.addAll(region)
+        }
+    }
 }
