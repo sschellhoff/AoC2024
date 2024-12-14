@@ -35,7 +35,7 @@ class Day14 : Day(14, 12, -1) {
                 }
             }
             if (!robotsOnTopOfEachOther) {
-                robots.print(bounds)
+                //robots.print(bounds)
                 return i
             }
         }
@@ -86,8 +86,4 @@ class Day14 : Day(14, 12, -1) {
             Robot(Vector2(pX, pY), Vector2(vX, vY))
         }
     }
-}
-
-fun main () {
-    Day14().run(Day.RunMode.BOTH)
 }

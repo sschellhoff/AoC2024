@@ -1,5 +1,7 @@
 package de.sschellhoff.utils
 
+import de.sschellhoff.toIntOrThrow
+
 data class Vector2(val x: Long, val y: Long) {
     operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
     operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
@@ -45,3 +47,7 @@ fun Vector2i.move(direction: Direction): Vector2i = when (direction) {
     Direction.SOUTH -> Vector2i(x, y) + Vector2i.Down
     Direction.WEST -> Vector2i(x, y) + Vector2i.Left
 }
+
+fun Vector2.toVector2i(): Vector2i = Vector2i(x.toIntOrThrow(), y.toIntOrThrow())
+
+fun Vector2i.toVector2() = Vector2(x.toLong(), y.toLong())

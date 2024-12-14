@@ -15,7 +15,7 @@ class Day12 : Day(12, 1930, 1206) {
     override fun part2(input: String): Long {
         val grid = Grid.fromString(input) { it }
         val costs = mutableListOf<Long>()
-        grid.forDistinctAreas { areaPieces, edgeInfo ->
+        grid.forDistinctAreasI { areaPieces, edgeInfo ->
             val edgePieces = edgeInfo.map { it.first }
             val area = areaPieces.size
             val numberOfHorizontalEdges = calculatePerimeterForEdgeDirection(

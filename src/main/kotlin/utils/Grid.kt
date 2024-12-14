@@ -4,7 +4,7 @@ import java.util.function.Predicate
 
 fun String.getGridSize(): Pair<Long, Long> = lines().first().length.toLong() to lines().size.toLong()
 
-data class Grid<T>(private val data: List<List<T>>) {
+data class Grid<T>(private val data: List<List<T>>): Space2D<T> {
     private val width: Int = data.first().size
     private val height: Int = data.size
 
@@ -16,7 +16,7 @@ data class Grid<T>(private val data: List<List<T>>) {
         }
     }
 
-    fun forEachIndexed(action: (x: Int, y: Int, c: T) -> Unit) {
+    override fun forEachIndexedI(action: (x: Int, y: Int, c: T) -> Unit) {
         data.forEachIndexed { y, line ->
             line.forEachIndexed { x, c ->
                 action(x, y, c)
@@ -24,12 +24,16 @@ data class Grid<T>(private val data: List<List<T>>) {
         }
     }
 
+    override fun forEachIndexed(action: (x: Long, y: Long, c: T) -> Unit) =
+        forEachIndexedI {x: Int, y: Int, c -> action(x.toLong(), y.toLong(), c)}
+
+
     private fun inBounds(position: Vector2i): Boolean =
         position.x in 0..<width && position.y in 0..<height
 
     fun findPositions(predicate: Predicate<T>): Set<Vector2i> {
         val result = mutableSetOf<Vector2i>()
-        forEachIndexed { x, y, c ->
+        forEachIndexedI { x: Int, y: Int, c ->
             if (predicate.test(c)) {
                 result.add(Vector2i(x, y))
             }
@@ -37,9 +41,10 @@ data class Grid<T>(private val data: List<List<T>>) {
         return result
     }
 
-    fun get(position: Vector2i): T = data[position.y][position.x]
+    override fun get(position: Vector2i): T = data[position.y][position.x]
+    override fun get(position: Vector2): T = get(position.toVector2i())
 
-    fun getNeighbours(position: Vector2i, predicate: Predicate<Vector2i> = Predicate { true }): List<Vector2i> {
+    override fun getNeighbours(position: Vector2i, predicate: Predicate<Vector2i>): List<Vector2i> {
         if(!inBounds(position)) {
             return emptyList()
         }
@@ -49,42 +54,11 @@ data class Grid<T>(private val data: List<List<T>>) {
         }.filter { inBounds(it) && predicate.test(it) }
     }
 
+    override fun getNeighbours(position: Vector2, predicate: Predicate<Vector2>): List<Vector2> =
+        getNeighbours(position.toVector2i()) { predicate.test(it.toVector2()) }.map { it.toVector2() }
+
     companion object {
         fun <T>fromString(input: String, toNode: (c: Char) -> T): Grid<T> =
             input.lines().map { line -> line.map { toNode(it) } }.let { Grid(data = it) }
-    }
-}
-
-fun <T>Grid<T>.floodFill(start: Vector2i, handleEdgePiece: (position: Vector2i, numberOfMatchingNeighbours: Int) -> Unit): Set<Vector2i> {
-    val value = get(start)
-    val visited = mutableSetOf<Vector2i>()
-    val toCheck = mutableListOf(start)
-    while (toCheck.isNotEmpty()) {
-        val next = toCheck.removeLast()
-        if (!visited.add(next)) {
-            continue
-        }
-        val neighbours = getNeighbours(next) { get(it) == value }
-        val numberOfMatchingNeighbours = neighbours.size
-        if (numberOfMatchingNeighbours < 4) {
-            handleEdgePiece(next, numberOfMatchingNeighbours)
-        }
-        neighbours.forEach { toCheck.add(it) }
-    }
-    return visited
-}
-
-fun <T>Grid<T>.forDistinctAreas(handleArea: (areaPieces: Set<Vector2i>, edgeInfo: List<Pair<Vector2i, Int>>) -> Unit) {
-    val visited = mutableSetOf<Vector2i>()
-    forEachIndexed { x, y, _ ->
-        val position = Vector2i(x, y)
-        if (!visited.contains(position)) {
-            val edgeInfo = mutableListOf<Pair<Vector2i, Int>>()
-            val region = floodFill(position) { edgePosition, numberOfNeighbours ->
-                edgeInfo.add(edgePosition to (numberOfNeighbours))
-            }
-            handleArea(region, edgeInfo)
-            visited.addAll(region)
-        }
     }
 }
