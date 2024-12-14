@@ -5,8 +5,8 @@ import java.util.function.Predicate
 fun String.getGridSize(): Pair<Long, Long> = lines().first().length.toLong() to lines().size.toLong()
 
 data class Grid<T>(private val data: List<List<T>>) {
-    val width: Int = data.first().size
-    val height: Int = data.size
+    private val width: Int = data.first().size
+    private val height: Int = data.size
 
     fun forEach(action: (c: T) -> Unit) {
         data.forEach { line ->
@@ -24,7 +24,7 @@ data class Grid<T>(private val data: List<List<T>>) {
         }
     }
 
-    fun inBounds(position: Vector2i): Boolean =
+    private fun inBounds(position: Vector2i): Boolean =
         position.x in 0..<width && position.y in 0..<height
 
     fun findPositions(predicate: Predicate<T>): Set<Vector2i> {
@@ -37,9 +37,7 @@ data class Grid<T>(private val data: List<List<T>>) {
         return result
     }
 
-    fun get(position: Vector2i): T {
-        return data[position.y][position.x]
-    }
+    fun get(position: Vector2i): T = data[position.y][position.x]
 
     fun getNeighbours(position: Vector2i, predicate: Predicate<Vector2i> = Predicate { true }): List<Vector2i> {
         if(!inBounds(position)) {

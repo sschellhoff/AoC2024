@@ -3,6 +3,7 @@ package de.sschellhoff.utils
 data class Vector2(val x: Long, val y: Long) {
     operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
     operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
+    operator fun times(scalar: Long) = Vector2(x * scalar, y * scalar)
 
     infix fun distanceVectorTo(other: Vector2): Vector2 = other - this
 
@@ -25,6 +26,7 @@ fun Vector2.move(direction: Direction): Vector2 = when (direction) {
 data class Vector2i(val x: Int, val y: Int) {
     operator fun plus(other: Vector2i) = Vector2i(x + other.x, y + other.y)
     operator fun minus(other: Vector2i) = Vector2i(x - other.x, y - other.y)
+    operator fun times(scalar: Int) = Vector2i(x * scalar, y * scalar)
 
     infix fun distanceVectorTo(other: Vector2i) = other - this
 
