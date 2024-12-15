@@ -30,3 +30,16 @@ fun Direction.turnAround(): Direction {
         Direction.WEST -> Direction.EAST
     }
 }
+
+fun Direction.isHorizontal(): Boolean = this == Direction.EAST || this == Direction.WEST
+fun Direction.isVertical(): Boolean = this == Direction.NORTH || this == Direction.SOUTH
+
+fun String.toDirections(): List<Direction> = map {
+    when (it) {
+        '^' -> Direction.NORTH
+        '>' -> Direction.EAST
+        'v' -> Direction.SOUTH
+        '<' -> Direction.WEST
+        else -> throw IllegalArgumentException(it.toString())
+    }
+}

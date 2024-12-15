@@ -4,9 +4,9 @@ import java.util.function.Predicate
 
 fun String.getGridSize(): Pair<Long, Long> = lines().first().length.toLong() to lines().size.toLong()
 
-data class Grid<T>(private val data: List<List<T>>): Space2D<T> {
-    private val width: Int = data.first().size
-    private val height: Int = data.size
+data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
+    val width: Int = data.first().size
+    val height: Int = data.size
 
     fun forEach(action: (c: T) -> Unit) {
         data.forEach { line ->
@@ -44,6 +44,11 @@ data class Grid<T>(private val data: List<List<T>>): Space2D<T> {
     override fun get(position: Vector2i): T = data[position.y][position.x]
     override fun get(position: Vector2): T = get(position.toVector2i())
 
+    // TODO maybe think about mutable/immutable grid
+    fun set(position: Vector2i, value: T) {
+        data[position.y][position.x] = value
+    }
+
     override fun getNeighbours(position: Vector2i, predicate: Predicate<Vector2i>): List<Vector2i> {
         if(!inBounds(position)) {
             return emptyList()
@@ -59,6 +64,6 @@ data class Grid<T>(private val data: List<List<T>>): Space2D<T> {
 
     companion object {
         fun <T>fromString(input: String, toNode: (c: Char) -> T): Grid<T> =
-            input.lines().map { line -> line.map { toNode(it) } }.let { Grid(data = it) }
+            input.lines().map { line -> line.map { toNode(it) }.toMutableList() }.let { Grid(data = it) }
     }
 }
