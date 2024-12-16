@@ -28,7 +28,7 @@ data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
         forEachIndexedI {x: Int, y: Int, c -> action(x.toLong(), y.toLong(), c)}
 
 
-    private fun inBounds(position: Vector2i): Boolean =
+    fun inBounds(position: Vector2i): Boolean =
         position.x in 0..<width && position.y in 0..<height
 
     fun findPositions(predicate: Predicate<T>): Set<Vector2i> {

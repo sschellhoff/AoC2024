@@ -259,7 +259,3 @@ class Day15 : Day(15, 10092, 9021, "_big", "_big") {
         return positions.first()
     }
 }
-
-fun main() {
-    Day15().run(Day.RunMode.BOTH)
-}
