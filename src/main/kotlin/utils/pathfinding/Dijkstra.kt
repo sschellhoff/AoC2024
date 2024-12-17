@@ -11,6 +11,7 @@ fun <NODE>dijkstra(start: NODE, isEnd: (node: NODE) -> Boolean, getNextNodes: (n
     while (openNodes.isNotEmpty()) {
         val u = openNodes.extract().first
         val costSoFar = pathInfo[u]?.cost ?: throw IllegalStateException()
+        closedNodes.add(u)
         if (isEnd(u)) {
             val path = mutableListOf(u)
             var current = pathInfo[u]?.predecessor

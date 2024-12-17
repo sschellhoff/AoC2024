@@ -71,6 +71,7 @@ private fun <NODE>findAllNodesOnAllShortestPaths(start: NODE, isEnd: (node: NODE
     while (openNodes.isNotEmpty()) {
         val u = openNodes.extract().first
         val costSoFar = pathInfo[u]?.cost ?: throw IllegalStateException()
+        closedNodes.add(u)
         if (isEnd(u)) {
             endNodes.add(u)
         }
