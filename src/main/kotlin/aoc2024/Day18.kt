@@ -17,10 +17,10 @@ class Day18 : Day(18, 22, 1) {
 
     override fun part2(input: String): Long {
         val (targetNode, grid, points) = input.parseInput()
-        var position = points.findFirstNotInGrid(grid)
-        println(position)
+        var indexForPointToInsert = points.findFirstNotInGrid(grid)
+        println(indexForPointToInsert)
         while (true) {
-            val nextPoint = points[position]
+            val nextPoint = points[indexForPointToInsert]
             grid.set(nextPoint, Tile.Wall)
             val path = dijkstra(Vector2i(0, 0), { node -> node == targetNode }) { position ->
                 grid.getNeighbours(position).filter { grid.get(it) == Tile.Empty }.map { EdgeInfo(position, it, 1) }
@@ -29,10 +29,8 @@ class Day18 : Day(18, 22, 1) {
                 println(nextPoint)
                 return 1
             }
-            position += 1
+            indexForPointToInsert += 1
         }
-
-        TODO("Not yet implemented")
     }
 
     enum class Tile {
@@ -77,8 +75,4 @@ class Day18 : Day(18, 22, 1) {
             }
         }
     }
-}
-
-fun main() {
-    Day18().run(Day.RunMode.BOTH)
 }
