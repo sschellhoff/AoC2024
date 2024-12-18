@@ -1,6 +1,7 @@
 package de.sschellhoff.utils
 
 import de.sschellhoff.toIntOrThrow
+import kotlin.math.abs
 
 data class Vector2(val x: Long, val y: Long) {
     operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
@@ -51,3 +52,11 @@ fun Vector2i.move(direction: Direction): Vector2i = when (direction) {
 fun Vector2.toVector2i(): Vector2i = Vector2i(x.toIntOrThrow(), y.toIntOrThrow())
 
 fun Vector2i.toVector2() = Vector2(x.toLong(), y.toLong())
+
+fun Vector2.manhattanDistance(other: Vector2): Long = (this - other).let { fromTo ->
+    abs(fromTo.x) + abs(fromTo.y)
+}
+
+fun Vector2i.manhattanDistance(other: Vector2i): Int = (this - other).let { fromTo ->
+    abs(fromTo.x) + abs(fromTo.y)
+}

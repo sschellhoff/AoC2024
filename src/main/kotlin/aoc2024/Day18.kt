@@ -18,7 +18,6 @@ class Day18 : Day(18, 22, 1) {
     override fun part2(input: String): Long {
         val (targetNode, grid, points) = input.parseInput()
         var indexForPointToInsert = points.findFirstNotInGrid(grid)
-        println(indexForPointToInsert)
         while (true) {
             val nextPoint = points[indexForPointToInsert]
             grid.set(nextPoint, Tile.Wall)
