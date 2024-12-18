@@ -65,5 +65,17 @@ data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
     companion object {
         fun <T>fromString(input: String, toNode: (c: Char) -> T): Grid<T> =
             input.lines().map { line -> line.map { toNode(it) }.toMutableList() }.let { Grid(data = it) }
+
+        fun <T>initialize(width: Int, height: Int, toNode: (x: Int, y: Int) -> T): Grid<T> {
+            val data = mutableListOf<MutableList<T>>()
+            (0..<height).forEach { y ->
+                val line = mutableListOf<T>()
+                (0..<width).forEach { x ->
+                    line.add(toNode(x, y))
+                }
+                data.add(line)
+            }
+            return Grid(data = data)
+        }
     }
 }
