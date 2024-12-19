@@ -3,7 +3,7 @@ package de.sschellhoff.aoc2024
 import de.sschellhoff.utils.Day
 import kotlin.math.pow
 
-class Day17 : Day(17, 1, 117440) {
+class Day17 : Day(17, 1, 117440, "", "_part2") {
     override fun part1(input: String): Long {
         val (c, p) = input.parseComputer()
         println(c.runProgram(p).joinToString(","))
@@ -22,9 +22,6 @@ class Day17 : Day(17, 1, 117440) {
      */
     override fun part2(input: String): Long {
         val (_, p) = input.parseComputer()
-        if (p.size < 10) {
-            return 117440L
-        }
         return findSolution(p)
     }
 
