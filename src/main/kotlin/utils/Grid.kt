@@ -31,6 +31,9 @@ data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
     fun inBounds(position: Vector2i): Boolean =
         position.x in 0..<width && position.y in 0..<height
 
+    fun inBounds(x: Int, y: Int): Boolean =
+        x in 0..<width && y in 0..<height
+
     fun findPositions(predicate: Predicate<T>): Set<Vector2i> {
         val result = mutableSetOf<Vector2i>()
         forEachIndexedI { x: Int, y: Int, c ->
@@ -62,6 +65,16 @@ data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
     override fun getNeighbours(position: Vector2, predicate: Predicate<Vector2>): List<Vector2> =
         getNeighbours(position.toVector2i()) { predicate.test(it.toVector2()) }.map { it.toVector2() }
 
+    fun count(t: T): Long {
+        var counter = 0L
+        forEachIndexedI { _, _, c ->
+            if (c == t) {
+                counter += 1
+            }
+        }
+        return counter
+    }
+
     companion object {
         fun <T>fromString(input: String, toNode: (c: Char) -> T): Grid<T> =
             input.lines().map { line -> line.map { toNode(it) }.toMutableList() }.let { Grid(data = it) }
@@ -78,4 +91,21 @@ data class Grid<T>(private val data: List<MutableList<T>>): Space2D<T> {
             return Grid(data = data)
         }
     }
+}
+
+fun String.findStartAndEndInCharGrid(cStart: Char = 'S', cEnd: Char = 'E'): Pair<Vector2i, Vector2i> {
+    var start: Vector2i? = null
+    var end: Vector2i? = null
+    this.lines().forEachIndexed { y, line ->
+        line.forEachIndexed { x, c ->
+            if (c == cStart) {
+                start = Vector2i(x, y)
+            } else if (c == cEnd) {
+                end = Vector2i(x, y)
+            }
+        }
+    }
+    checkNotNull(start)
+    checkNotNull(end)
+    return start!! to end!!
 }

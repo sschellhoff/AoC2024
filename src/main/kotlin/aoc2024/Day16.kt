@@ -21,7 +21,7 @@ class Day16: Day(16, 7036, 45) {
 
     private fun setup(input: String): Pair<Grid<Tile>, Pair<Pair<Vector2i, Direction>, (Pair<Vector2i, Direction>) -> Boolean>> {
         val grid = Grid.fromString(input) { if (it == '#') Tile.Wall else Tile.Empty }
-        val (start, end) = input.findStartAndEnd()
+        val (start, end) = input.findStartAndEndInCharGrid(cStart = 'S', cEnd = 'E')
         val startWithDirection = start to Direction.EAST
         val isEnd = { n: Pair<Vector2i, Direction> -> n.first == end}
         return grid to (startWithDirection to isEnd)
@@ -40,23 +40,6 @@ class Day16: Day(16, 7036, 45) {
     enum class Tile {
         Wall,
         Empty
-    }
-
-    private fun String.findStartAndEnd(): Pair<Vector2i, Vector2i> {
-        var start: Vector2i? = null
-        var end: Vector2i? = null
-        this.lines().forEachIndexed { y, line ->
-            line.forEachIndexed { x, c ->
-                if (c == 'S') {
-                    start = Vector2i(x, y)
-                } else if (c == 'E') {
-                    end = Vector2i(x, y)
-                }
-            }
-        }
-        checkNotNull(start)
-        checkNotNull(end)
-        return start!! to end!!
     }
 }
 
