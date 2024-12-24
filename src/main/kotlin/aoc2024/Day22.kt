@@ -32,19 +32,6 @@ class Day22: Day(22, 37327623L, 24L) {
         return counts.values.max()
     }
 
-    private fun List<Map<NTuple4<Long, Long, Long, Long>, Long>>.changesToMaxBananas(): Long {
-        val changes = this.flatMap { it.keys }.toSet()
-        val counts = mutableMapOf<NTuple4<Long, Long, Long, Long>, Long>()
-        changes.forEach { change ->
-            this.forEach { buyer ->
-                val n = buyer.getOrDefault(change, 0)
-                val o = counts.getOrDefault(change, 0)
-                counts[change] = o + n
-            }
-        }
-        return counts.values.max()
-    }
-
     private fun Long.generateSecrets(n: Long): List<Long> {
         val numberOfBananas = mutableListOf<Long>(this.numberOfBananas())
         (1..<n).fold(this) { a, _ ->
