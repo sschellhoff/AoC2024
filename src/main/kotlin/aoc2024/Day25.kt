@@ -42,7 +42,3 @@ class Day25: Day(25, 3, 50) {
         return data
     }
 }
-
-fun main() {
-    Day25().run(Day.RunMode.BOTH)
-}
