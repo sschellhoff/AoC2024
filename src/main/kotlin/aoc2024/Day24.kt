@@ -3,7 +3,7 @@ package de.sschellhoff.aoc2024
 import de.sschellhoff.utils.Day
 import de.sschellhoff.utils.blockLines
 
-class Day24: Day(24, 2024, 1) {
+class Day24 : Day(24, 2024, 1) {
     override fun part1(input: String): Long {
         val (wires, expressions) = input.parse(false)
         return evaluate(wires, expressions)
@@ -23,24 +23,38 @@ class Day24: Day(24, 2024, 1) {
     }
 
     override fun part2(input: String): Long {
-        val (_, expressions) = input.parse(true)
-        // tried to find wrong bits in the results
-        // looked through the needed rules and drawn the adders by hand to find the bad connections
-        // idea to automate
-        // start loop from z00 to z45
-        // recognize the sub parts of the full adder
-        // detect the bad connection
-        // this should be possible, because the wanted swap is always inside each adder
-        println(listOf("hjm",
-                        "mcq",
-                        "z37",
-                        "dsd",
-                        "sbg",
-                        "z19",
-                        "djg",
-                        "z12").sorted().joinToString(","))
+        println(findBadOutputWires(input).sorted().joinToString(","))
+        return 1
+    }
 
-        return calc(0, 0, expressions)
+    private fun findBadOutputWires(input: String): MutableSet<String> {
+        val badOutputs = mutableSetOf<String>()
+        val (gates, gatesFedBy) = input.parse2()
+        gates.forEach { gate ->
+            if (gate.t == "z00" || gate.t == "z45" || gate.a == "x00" || gate.a == "y00") {
+            } else if (gate.a.startsWith("x") || gate.a.startsWith("y")) {
+                if (gate.t.startsWith("z")) {
+                    badOutputs.add(gate.t)
+                } else if (gate.op == "XOR" && gatesFedBy[gate.t]!!.intersect(setOf("XOR", "AND")).isEmpty()) {
+                    badOutputs.add(gate.t)
+                } else if(gate.op == "AND" && gatesFedBy[gate.t]!!.intersect(setOf("OR")).isEmpty()) {
+                    badOutputs.add(gate.t)
+                }
+            } else if(gate.op == "XOR") {
+                if (!gate.t.startsWith("z")) {
+                    badOutputs.add(gate.t)
+                }
+            } else if(gate.op == "AND") {
+                if (gatesFedBy[gate.t]?.contains("OR") != true) {
+                    badOutputs.add(gate.t)
+                }
+            } else if(gate.op == "OR") {
+                if (gatesFedBy[gate.t]?.intersect(setOf("XOR", "AND"))?.isEmpty() != false) {
+                    badOutputs.add(gate.t)
+                }
+            }
+        }
+        return badOutputs
     }
 
     private fun calc(a: Long, b: Long, expressions: Map<String, Expr>): Long {
@@ -53,7 +67,8 @@ class Day24: Day(24, 2024, 1) {
     }
 
     private fun evaluate(wires: MutableMap<String, Boolean>, expressions: MutableMap<String, Expr>): Long {
-        while (expressions.isNotEmpty() && eval(expressions, wires)) {}
+        while (expressions.isNotEmpty() && eval(expressions, wires)) {
+        }
         var r = 0L
         wires.keys.filter { it.startsWith("z") }.sorted().reversed().forEach { b ->
             r *= 2
@@ -85,6 +100,19 @@ class Day24: Day(24, 2024, 1) {
         }
         return wires to expressions
     }
+
+    private fun String.parse2(): Pair<List<Gate>, Map<String, Set<String>>> {
+        val gatesFedBy = mutableMapOf<String, MutableSet<String>>()
+        val (_, circuits) = blockLines()
+        return circuits.map { line ->
+            val (a, op, b, _, t) = line.split(" ")
+            gatesFedBy.getOrPut(a) { mutableSetOf() }.add(op)
+            gatesFedBy.getOrPut(b) { mutableSetOf() }.add(op)
+            Gate(a = a, b = b, op = op, t = t)
+        } to gatesFedBy
+    }
+
+    data class Gate(val a: String, val b: String, val op: String, val t: String)
 
     private fun swapRule(original: String): String = when (original) {
         "jsb AND njf -> z12" -> "jsb AND njf -> djg"

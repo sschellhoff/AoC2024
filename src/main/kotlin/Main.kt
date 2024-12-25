@@ -9,4 +9,3 @@ fun main() {
         day.run(Day.RunMode.BOTH)
     }
 }
-
